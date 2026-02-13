@@ -29,7 +29,7 @@ Show selection via query param:
 ```
 
 What it does:
-- installs/updates `nginx` + `apache2-utils` + `nodejs`
+- installs/updates `nginx` + `apache2-utils` + `nodejs` + `pnpm`
 - runs `pnpm install`
 - runs `pnpm run build`
 - copies `dist/` to `/var/www/valentine/dist`
