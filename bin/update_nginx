@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+APP_NAME="valentine"
+WEB_ROOT="/var/www/$APP_NAME"
+NGINX_CONF="/etc/nginx/sites-available/$APP_NAME.conf"
+NGINX_ENABLED="/etc/nginx/sites-enabled/$APP_NAME.conf"
+HTPASSWD_FILE="/etc/nginx/.htpasswd-$APP_NAME"
+
+tee "$NGINX_CONF" >/dev/null <<EOF_NGINX
+server {
+    listen 80;
+    listen [::]:80;
+    server_name valentine.lluis.me;
+
+    root $WEB_ROOT/dist;
+    index index.html;
+
+    auth_basic "Restricted";
+    auth_basic_user_file $HTPASSWD_FILE;
+
+    location / {
+        try_files \$uri \$uri/ /index.html;
+    }
+}
+EOF_NGINX
+
+ln -sfn "$NGINX_CONF" "$NGINX_ENABLED"
+rm -f /etc/nginx/sites-enabled/default
+nginx -t
+systemctl restart nginx
+systemctl enable nginx

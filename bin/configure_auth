@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+APP_NAME="valentine"
+HTPASSWD_FILE="/etc/nginx/.htpasswd-$APP_NAME"
+
+read -r -p "User: " BASIC_AUTH_USER
+read -r -s -p "Pw: " BASIC_AUTH_PASSWORD
+echo
+
+htpasswd -bc "$HTPASSWD_FILE" "$BASIC_AUTH_USER" "$BASIC_AUTH_PASSWORD" >/dev/null
+echo "Credentials written to $HTPASSWD_FILE"

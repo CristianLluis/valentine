@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+APP_NAME="valentine"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+WEB_ROOT="/var/www/$APP_NAME"
+
+apt-get update
+env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends nginx apache2-utils nodejs
+
+pnpm --dir "$PROJECT_ROOT" install
+pnpm --dir "$PROJECT_ROOT" run build
+
+rm -rf "$WEB_ROOT/dist"
+mkdir -p "$WEB_ROOT/dist"
+cp -a "$PROJECT_ROOT/dist/." "$WEB_ROOT/dist/"
+
+"$SCRIPT_DIR/update_nginx"
+
+echo "Install finished."
+echo "If needed, run ./bin/configure_auth to set/update basic auth credentials."

@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+DIST_DIR="$PROJECT_ROOT/dist"
+
+rm -rf "$DIST_DIR"
+mkdir -p "$DIST_DIR"
+
+cp -a "$PROJECT_ROOT/src/assets" "$DIST_DIR/assets"
+cp "$PROJECT_ROOT/src/index.html" "$DIST_DIR/index.html"
+
+esbuild "$PROJECT_ROOT/src/app.js" "$PROJECT_ROOT"/src/shows/*.js "$PROJECT_ROOT/src/styles.css" \
+  --bundle \
+  --format=esm \
+  --target=es2022 \
+  --minify \
+  --outbase="$PROJECT_ROOT/src" \
+  --outdir="$DIST_DIR"
