@@ -17,7 +17,5 @@ rm -rf "$WEB_ROOT/dist"
 mkdir -p "$WEB_ROOT/dist"
 cp -a "$PROJECT_ROOT/dist/." "$WEB_ROOT/dist/"
 
-"$SCRIPT_DIR/update_nginx"
-
 echo "Install finished."
 echo "If needed, run ./bin/configure_auth to set/update basic auth credentials."
